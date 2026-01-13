@@ -4,8 +4,10 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Experience from './components/Experience';
 import Skills from './components/Skills';
+import Expertise from './components/Expertise';
 import Services from './components/Services';
 import Projects from './components/Projects';
+import Testimonials from './components/Testimonials';
 
 function App() {
   return (
@@ -15,8 +17,10 @@ function App() {
       <About />
       <Experience />
       <Skills />
+      <Expertise />
       <Services />
       <Projects />
+      <Testimonials />
 
       <footer className="py-12 border-t border-white/5 text-center">
         <p className="text-white/20 text-sm tracking-widest uppercase">
