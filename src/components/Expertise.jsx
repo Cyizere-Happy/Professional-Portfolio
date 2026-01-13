@@ -1,116 +1,186 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import videoImg from '../assets/video_making.png';
+import React, { useRef } from 'react';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import videoPlaceholderImg from '../assets/video_making.png';
+import soraVideo from '../assets/sora_smart.mp4';
 import splineImg from '../assets/spline_3d.png';
 import frontendImg from '../assets/frontend_dev.png';
 
 const expertiseItems = [
     {
         title: "Video Making",
-        description: "Cinematic storytelling and high-end post-production.",
-        image: videoImg,
+        description: "Cinematic storytelling and high-end post-production for digital narratives. Showcasing 'Sora Smart' production.",
+        video: soraVideo,
+        image: videoPlaceholderImg,
         tag: "Motion"
     },
     {
         title: "Spline 3D",
-        description: "Immersive 3D environments for the modern web.",
+        description: "Immersive 3D environments and interactive sculptures. Explore the live project at Vercel.",
         image: splineImg,
-        tag: "Design"
+        tag: "3D Design",
+        link: "https://3-d-web-wubx.vercel.app/"
     },
     {
         title: "Frontend Dev",
-        description: "Pixel-perfect, performance-driven user interfaces.",
+        description: "Built my own portfolio from scratch without any pre-made designs, focusing on unique architecture and performance.",
         image: frontendImg,
         tag: "Tech"
     }
 ];
 
 const ExpertiseCard = ({ item, index }) => {
-    return (
+    const x = useMotionValue(0);
+    const y = useMotionValue(0);
+
+    const mouseXSpring = useSpring(x);
+    const mouseYSpring = useSpring(y);
+
+    const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["15deg", "-15deg"]);
+    const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-15deg", "15deg"]);
+
+    const handleMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+        const xPct = mouseX / width - 0.5;
+        const yPct = mouseY / height - 0.5;
+        x.set(xPct);
+        y.set(yPct);
+    };
+
+    const handleMouseLeave = () => {
+        x.set(0);
+        y.set(0);
+    };
+
+    const CardContent = (
         <motion.div
-            initial={{ opacity: 0, y: 50, rotateY: 20 }}
-            whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8, delay: index * 0.2 }}
-            className="group relative h-[500px] w-full max-w-[350px] overflow-hidden rounded-3xl cursor-pointer perspective-1000"
+            style={{
+                rotateX,
+                rotateY,
+                transformStyle: "preserve-3d",
+            }}
+            onMouseMove={handleMouseMove}
+            onMouseLeave={handleMouseLeave}
+            className="w-full h-full relative p-8 bg-[#0a0a0a] border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-white/40 group-hover:shadow-[0_0_40px_rgba(255,255,255,0.05)]"
         >
-            <motion.div
-                whileHover={{ rotateY: -10, rotateX: 5, scale: 1.02 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className="w-full h-full relative"
+            {/* Background Asset - Optimized for visibility */}
+            <div
+                style={{ transform: "translateZ(-30px)" }}
+                className="absolute inset-0 z-0 overflow-hidden"
             >
-                {/* Image */}
-                <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700"
-                />
+                {item.video ? (
+                    <video
+                        src={item.video}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    />
+                ) : (
+                    <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    />
+                )}
+                {/* Lighter overlay for better visibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-50 group-hover:opacity-30 transition-opacity" />
+            </div>
 
-                {/* Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
-
-                {/* Content */}
-                <div className="absolute bottom-0 left-0 p-8 w-full">
-                    <span className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md rounded-full text-[10px] uppercase tracking-widest mb-4 border border-white/10">
+            {/* Content - Elevated for 3D effect */}
+            <div
+                style={{ transform: "translateZ(40px)" }}
+                className="relative z-10 h-full flex flex-col justify-end"
+            >
+                <div className="mb-auto">
+                    <span className="inline-block px-4 py-1 bg-white/10 backdrop-blur-md rounded-full text-[9px] font-bold uppercase tracking-[0.3em] border border-white/20 text-white group-hover:bg-white/20 transition-all">
                         {item.tag}
                     </span>
-                    <h3 className="text-3xl font-heading font-bold mb-2 group-hover:translate-x-2 transition-transform duration-500">{item.title}</h3>
-                    <p className="text-white/40 text-sm leading-relaxed group-hover:text-white/60 transition-colors">
-                        {item.description}
-                    </p>
                 </div>
 
-                {/* Decorative border on hover */}
-                <div className="absolute inset-0 border border-white/0 group-hover:border-white/10 rounded-3xl transition-all duration-500 scale-95 group-hover:scale-100" />
-            </motion.div>
+                <h3 className="text-4xl font-heading font-black mb-4 tracking-tighter leading-none text-white group-hover:translate-x-1 transition-transform duration-300">
+                    {item.title}
+                </h3>
+
+                <p className="text-white/80 text-sm leading-relaxed font-body max-w-[90%] drop-shadow-md">
+                    {item.description}
+                </p>
+
+                {item.link && (
+                    <div className="mt-8 flex items-center gap-3 text-white/60 group-hover:text-white text-[10px] uppercase tracking-[0.2em] font-bold transition-all">
+                        <span className="border-b border-white/20 pb-1">Explore Project</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                            <path d="M7 17L17 7M17 7H7M17 7V17" />
+                        </svg>
+                    </div>
+                )}
+            </div>
+
+            {/* Subtle Corner Accents */}
+            <div className="absolute top-8 right-8 w-6 h-6 opacity-30 border-t-2 border-r-2 border-white group-hover:opacity-100 transition-opacity duration-500" />
+            <div className="absolute bottom-8 left-8 w-6 h-6 opacity-30 border-b-2 border-l-2 border-white group-hover:opacity-100 transition-opacity duration-500" />
+        </motion.div>
+    );
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+            className={`group relative h-[480px] w-full rounded-[2.5rem] overflow-hidden ${index % 2 === 0 ? 'md:translate-y-10' : ''}`}
+        >
+            {item.link ? (
+                <a href={item.link} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+                    {CardContent}
+                </a>
+            ) : (
+                CardContent
+            )}
         </motion.div>
     );
 };
 
 const Expertise = () => {
     return (
-        <section id="expertise" className="py-32 px-6 relative bg-[#050505]">
-            <div className="max-w-7xl mx-auto">
-                <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-                    <motion.div
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                    >
-                        <h2 className="text-6xl md:text-8xl font-heading font-bold tracking-tighter uppercase leading-none">
-                            Creative <br />
-                            <span className="text-white/20">Expertise</span>
-                        </h2>
-                    </motion.div>
+        <section id="expertise" className="relative py-40 px-6 md:px-12 bg-[#050505] overflow-hidden">
+            {/* Aesthetic Background - Matching other sections */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
 
-                    <motion.div
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        className="max-w-xs"
-                    >
-                        <p className="text-white/40 text-sm italic uppercase tracking-[0.2em] mb-4">Blending art and technology</p>
-                        <p className="text-white/60 leading-relaxed">
-                            Crafting unique digital narratives through cinematic visuals and interactive technology.
-                        </p>
-                    </motion.div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[500px] glow-white opacity-[0.03] blur-[150px] pointer-events-none" />
+
+            <div className="max-w-4xl mx-auto relative z-10">
+                {/* Modern Section Header */}
+                <div className="mb-32 flex flex-col items-start gap-4">
+                    <span className="text-white/30 text-[10px] uppercase tracking-[0.5em] font-bold">
+                        — My Specialties
+                    </span>
+                    <h2 className="font-heading text-6xl md:text-8xl font-black tracking-tighter leading-[0.8] uppercase text-white">
+                        Creative <br />
+                        <span className="text-white/20">Expertise</span>
+                    </h2>
+                    <p className="font-body text-white/40 text-base max-w-sm leading-relaxed mt-6 italic border-l-2 border-white/5 pl-6">
+                        Bridging the gap between technical architecture and visual storytelling.
+                    </p>
                 </div>
 
-                <div className="flex flex-wrap lg:flex-nowrap gap-8 justify-center items-center">
+                {/* Grid Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-24">
                     {expertiseItems.map((item, index) => (
                         <ExpertiseCard key={item.title} item={item} index={index} />
                     ))}
                 </div>
 
-                {/* Navigation Hint */}
-                <div className="mt-20 flex justify-center gap-4">
-                    <div className="w-12 h-[1px] bg-white/10" />
-                    <div className="flex gap-2">
-                        {[0, 1, 2].map(i => (
-                            <div key={i} className={`w-1.5 h-1.5 rounded-full ${i === 1 ? 'bg-white' : 'bg-white/10'}`} />
-                        ))}
-                    </div>
-                    <div className="w-12 h-[1px] bg-white/10" />
+                {/* Bottom navigation hint */}
+                <div className="flex justify-center items-center gap-8 mt-12 opacity-20 hover:opacity-100 transition-opacity duration-700">
+                    <div className="h-[1px] w-24 bg-white" />
+                    <span className="text-[10px] uppercase font-bold tracking-[0.4em]">Design & Code</span>
+                    <div className="h-[1px] w-24 bg-white" />
                 </div>
             </div>
         </section>
