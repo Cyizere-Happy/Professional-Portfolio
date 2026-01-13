@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import videoPlaceholderImg from '../assets/video_making.png';
 import soraVideo from '../assets/sora_smart.mp4';
@@ -11,7 +11,8 @@ const expertiseItems = [
         description: "Cinematic storytelling and high-end post-production for digital narratives. Showcasing 'Sora Smart' production.",
         video: soraVideo,
         image: videoPlaceholderImg,
-        tag: "Motion"
+        tag: "Motion",
+        hasVideo: true
     },
     {
         title: "Spline 3D",
@@ -31,6 +32,8 @@ const expertiseItems = [
 const ExpertiseCard = ({ item, index }) => {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const videoRef = useRef(null);
 
     const mouseXSpring = useSpring(x);
     const mouseYSpring = useSpring(y);
@@ -55,6 +58,22 @@ const ExpertiseCard = ({ item, index }) => {
         y.set(0);
     };
 
+    const handleVideoClick = (e) => {
+        if (item.hasVideo) {
+            e.preventDefault();
+            e.stopPropagation();
+            if (videoRef.current) {
+                if (isPlaying) {
+                    videoRef.current.pause();
+                    setIsPlaying(false);
+                } else {
+                    videoRef.current.play();
+                    setIsPlaying(true);
+                }
+            }
+        }
+    };
+
     const CardContent = (
         <motion.div
             style={{
@@ -64,22 +83,48 @@ const ExpertiseCard = ({ item, index }) => {
             }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className="w-full h-full relative p-8 bg-[#0a0a0a] border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-white/40 group-hover:shadow-[0_0_40px_rgba(255,255,255,0.05)]"
+            className="w-full h-full relative p-8 border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-white/40 group-hover:shadow-[0_0_40px_rgba(255,255,255,0.05)]"
         >
-            {/* Background Asset - Optimized for visibility */}
+            {/* Background Color Layer - Behind everything */}
+            <div className="absolute inset-0 bg-[#0a0a0a] -z-10" style={{ transform: "translateZ(-60px)" }} />
+
+            {/* Background Asset - In the middle */}
             <div
                 style={{ transform: "translateZ(-30px)" }}
-                className="absolute inset-0 z-0 overflow-hidden"
+                className="absolute inset-0 z-0 overflow-hidden rounded-[2.5rem] cursor-pointer"
+                onClick={handleVideoClick}
             >
-                {item.video ? (
-                    <video
-                        src={item.video}
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
-                    />
+                {item.hasVideo ? (
+                    <>
+                        {/* Thumbnail Image */}
+                        <img
+                            src={item.image}
+                            alt={item.title}
+                            className={`w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 ${isPlaying ? 'opacity-0' : 'opacity-100'}`}
+                        />
+                        {/* Video Element */}
+                        <video
+                            ref={videoRef}
+                            src={item.video}
+                            loop
+                            playsInline
+                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${isPlaying ? 'opacity-100' : 'opacity-0'}`}
+                        />
+                        {/* Play Button Overlay */}
+                        {!isPlaying && (
+                            <motion.div
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
+                            >
+                                <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/40 flex items-center justify-center group-hover:bg-white/30 group-hover:scale-110 transition-all duration-300">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white" className="ml-1">
+                                        <path d="M8 5v14l11-7z" />
+                                    </svg>
+                                </div>
+                            </motion.div>
+                        )}
+                    </>
                 ) : (
                     <img
                         src={item.image}
@@ -88,7 +133,7 @@ const ExpertiseCard = ({ item, index }) => {
                     />
                 )}
                 {/* Lighter overlay for better visibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent opacity-50 group-hover:opacity-30 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
             </div>
 
             {/* Content - Elevated for 3D effect */}
