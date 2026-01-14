@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import soraVideo from '../assets/sora_smart.mp4';
 import codiVideo from '../assets/CodiSwift.mp4';
 import cherryVideo from '../assets/CherryLoves.mp4';
+import planShiftVideo from '../assets/PlanShift.mp4';
 import { ExternalLink, Github, Maximize2, Play, Pause, SkipForward, Share2 } from 'lucide-react';
 
 const ProjectCard = ({ id, title, description, tech, delay, rotation, xOffset, yOffset, link, video, onClick }) => {
@@ -303,9 +304,11 @@ const Projects = () => {
     const projects = [
         {
             id: "01",
-            title: "PlanShift API",
-            description: "Distributed microservices for 3D architectural data sync. Engineered with Go/gRPC for sub-10ms latency processing.",
-            tech: ["Go", "gRPC", "Redis", "PostgreSQL"],
+            title: "PlanShift",
+            description: "PlanShift lets you explore, plan, and visualize building spaces in interactive 3D—making design decisions faster, clearer, and smarter.",
+            fullDescription: "Built by me and Kelia as the CEOs of 4WARD. I specialized in the Three.js implementation. PlanShift is a revolutionary platform that allows users to explore, plan, and visualize building spaces in an immersive, interactive 3D environment, significantly accelerating and improving design decision-making.",
+            tech: ["Three.js", "React", "Vite", "Tailwind"],
+            video: planShiftVideo,
             rotation: -3,
             xOffset: "0%",
             yOffset: "0px",
@@ -314,7 +317,7 @@ const Projects = () => {
         {
             id: "02",
             title: "CodiSwift",
-            description: "Interactive Swift learning platform with gamification. Full-stack implementation using Swift, Vapor, and WebSockets.",
+            description: "Engineered a scalable Swift/Vapor backend with real-time WebSocket synchronization. Designed a robust infrastructure to handle gamified learning and data persistence.",
             fullDescription: "CodiSwift is a comprehensive language learning app built entirely in Swift. It features a Vapor backend managing authentication, real-time WebSocket game data, and an admin dashboard for content management. I architected both the frontend iOS app and the scalable backend infrastructure.",
             tech: ["Swift", "Vapor", "WebSockets", "iOS"],
             video: codiVideo,
@@ -330,7 +333,7 @@ const Projects = () => {
         {
             id: "03",
             title: "CherryLoves",
-            description: "Secure e-commerce backend architecture. Built with Java Spring Boot and Spring Security for robust authentication and order management.",
+            description: "Architected a secure e-commerce backend with Java Spring Boot. Implemented complex JWT authentication and transactional integrity for enterprise-grade order management.",
             fullDescription: "CherryLoves is a full-stack e-commerce platform where I gathered requirements and built the entire system. A key highlight is the robust backend architecture using Java Spring Boot and Spring Security with JWT. I designed accessible endpoints for product management, secure user authentication, and order processing, demonstrating enterprise-grade security practices.",
             tech: ["Java", "Spring Boot", "Spring Security", "JWT"],
             video: cherryVideo,
@@ -342,9 +345,11 @@ const Projects = () => {
         },
         {
             id: "04",
-            title: "CloudMesh",
-            description: "Serverless provisioning engine for hybrid cloud infrastructures with automated security auditing.",
-            tech: ["Swift", "Vapor", "AWS", "Terraform"],
+            title: "Camp-Feedback",
+            description: "Designed a high-performance TypeScript/Node.js backend for DevX SummerCamp feedback. Engineered secure data pipelines and JWT protection for sensitive participant analytics.",
+            fullDescription: "Built to streamline feedback submission, provide real-time insights, and help organizers improve future camps. Features include user-friendly forms, data visualization dashboards, and secure data storage. The backend is built with TypeScript, Node.js, and Express, featuring robust JWT authentication.",
+            tech: ["TypeScript", "Node.js", "Express", "JWT"],
+            link: "https://github.com/Cyizere-Happy/Camp-Feedback",
             rotation: 4,
             xOffset: "5%",
             yOffset: "-20px",
@@ -353,7 +358,7 @@ const Projects = () => {
         {
             id: "05",
             title: "Pentest Shell",
-            description: "Advanced network penetration testing script featuring customizable scans (Basic, Full, Web), vulnerability mapping, and automated exploitation checks. Showcasing deep backend security expertise.",
+            description: "Developed sophisticated backend automation for network security auditing. Created complex Bash logic for vulnerability mapping and automated exploitation verification.",
             tech: ["Shell", "Bash", "Security", "Automation"],
             link: "https://github.com/Cyizere-Happy/Pentest-Tool",
             // video: soraVideo, // No video for Pentest Shell
