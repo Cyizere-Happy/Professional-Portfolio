@@ -4,6 +4,24 @@ import { Home, User, Briefcase, Zap, Palette, Wrench, FolderOpen, MessageCircle,
 
 const Navbar = () => {
     const [hoveredItem, setHoveredItem] = useState(null);
+    const [activeItem, setActiveItem] = useState('home');
+
+    React.useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    setActiveItem(entry.target.id);
+                }
+            });
+        }, { threshold: 0.5 }); // 50% section visibility triggers update
+
+        navItems.forEach(item => {
+            const element = document.getElementById(item.id);
+            if (element) observer.observe(element);
+        });
+
+        return () => observer.disconnect();
+    }, []);
 
     const navItems = [
         { icon: <Home size={20} />, label: 'Home', id: 'home' },
@@ -43,7 +61,7 @@ const Navbar = () => {
                             onClick={(e) => handleClick(e, item.id)}
                             whileHover={{ scale: 1.2, y: -4 }}
                             whileTap={{ scale: 0.9 }}
-                            className="text-white/60 hover:text-white transition-colors duration-300 cursor-pointer p-2 rounded-full hover:bg-white/10 block"
+                            className={`transition-all duration-300 cursor-pointer p-3 rounded-full block ${activeItem === item.id ? 'bg-white text-black scale-110 shadow-[0_0_20px_rgba(255,255,255,0.3)]' : 'text-white/60 hover:text-white hover:bg-white/10'}`}
                         >
                             {item.icon}
                         </motion.a>

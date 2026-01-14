@@ -5,64 +5,79 @@ import codiVideo from '../assets/CodiSwift.mp4';
 import cherryVideo from '../assets/CherryLoves.mp4';
 import { ExternalLink, Github, Maximize2, Play, Pause, SkipForward, Share2 } from 'lucide-react';
 
-const ProjectCard = ({ id, title, description, tech, delay, rotation, xOffset, yOffset, link, onClick }) => (
-    <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 50, rotate: rotation - 5 }}
-        whileInView={{ opacity: 1, scale: 1, y: 0, rotate: rotation }}
-        whileHover={{ scale: 1.02, rotate: 0, zIndex: 50 }}
-        transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
-        viewport={{ once: true }}
-        onClick={onClick}
-        className="relative bg-[#0a0a0a] border border-white/10 p-8 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-full md:w-[320px] aspect-square flex flex-col justify-between group cursor-pointer"
-        style={{
-            translateY: yOffset,
-            translateX: xOffset,
-        }}
-    >
-        <div className="flex justify-between items-start">
-            <span className="text-white/10 font-heading text-xl font-bold">{id}</span>
-            <div className="flex gap-2">
-                <button
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onClick();
-                    }}
-                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300"
-                    title="View Project Details"
-                >
-                    <Maximize2 size={18} className="text-white group-hover:text-black" />
-                </button>
-                {link && (
-                    <a
-                        href={link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
+const ProjectCard = ({ id, title, description, tech, delay, rotation, xOffset, yOffset, link, video, onClick }) => {
+
+    const handleCardClick = () => {
+        if (video) {
+            onClick();
+        } else if (link) {
+            window.open(link, '_blank', 'noreferrer');
+        }
+    };
+
+    return (
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9, y: 50, rotate: rotation - 5 }}
+            whileInView={{ opacity: 1, scale: 1, y: 0, rotate: rotation }}
+            whileHover={{ scale: 1.02, rotate: 0, zIndex: 50 }}
+            transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            onClick={handleCardClick}
+            className="relative bg-[#0a0a0a] border border-white/10 p-8 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-full md:w-[320px] aspect-square flex flex-col justify-between group cursor-pointer"
+            style={{
+                translateY: yOffset,
+                translateX: xOffset,
+            }}
+        >
+            <div className="flex justify-between items-start">
+                <span className="text-white/10 font-heading text-xl font-bold">{id}</span>
+                <div className="flex gap-2">
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleCardClick();
+                        }}
                         className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300"
-                        title="View Code"
+                        title={video ? "View Project Details" : "View Code on GitHub"}
                     >
-                        <Github size={18} className="text-white group-hover:text-black" />
-                    </a>
-                )}
+                        {video ? (
+                            <Maximize2 size={18} className="text-white group-hover:text-black" />
+                        ) : (
+                            <Github size={18} className="text-white group-hover:text-black" />
+                        )}
+                    </button>
+                    {link && video && (
+                        <a
+                            href={link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300"
+                            title="View Code"
+                        >
+                            <Github size={18} className="text-white group-hover:text-black" />
+                        </a>
+                    )}
+                </div>
             </div>
-        </div>
 
-        <div>
-            <h3 className="text-white font-heading text-2xl font-bold mb-3 tracking-tight">{title}</h3>
-            <p className="text-white/40 text-xs leading-relaxed font-body">
-                {description}
-            </p>
-        </div>
+            <div>
+                <h3 className="text-white font-heading text-2xl font-bold mb-3 tracking-tight">{title}</h3>
+                <p className="text-white/40 text-xs leading-relaxed font-body">
+                    {description}
+                </p>
+            </div>
 
-        <div className="flex flex-wrap gap-1.5 pt-4">
-            {tech.map((t, idx) => (
-                <span key={idx} className="text-[9px] uppercase tracking-widest font-bold text-white/30 bg-white/5 px-2 py-1 rounded">
-                    {t}
-                </span>
-            ))}
-        </div>
-    </motion.div>
-);
+            <div className="flex flex-wrap gap-1.5 pt-4">
+                {tech.map((t, idx) => (
+                    <span key={idx} className="text-[9px] uppercase tracking-widest font-bold text-white/30 bg-white/5 px-2 py-1 rounded">
+                        {t}
+                    </span>
+                ))}
+            </div>
+        </motion.div>
+    );
+};
 
 const ProjectModal = ({ item, isOpen, onClose }) => {
     const videoRef = useRef(null);
@@ -341,7 +356,7 @@ const Projects = () => {
             description: "Advanced network penetration testing script featuring customizable scans (Basic, Full, Web), vulnerability mapping, and automated exploitation checks. Showcasing deep backend security expertise.",
             tech: ["Shell", "Bash", "Security", "Automation"],
             link: "https://github.com/Cyizere-Happy/Pentest-Tool",
-            video: soraVideo, // Placeholder or specific video if available
+            // video: soraVideo, // No video for Pentest Shell
             rotation: -2,
             xOffset: "-10%",
             yOffset: "20px",

@@ -25,7 +25,7 @@ const Contact = () => {
     };
 
     const socialLinks = [
-        { name: 'GitHub', icon: '⚡', url: 'https://github.com' },
+        { name: 'GitHub', icon: '⚡', url: 'https://github.com/Cyizere-Happy' },
         { name: 'LinkedIn', icon: '💼', url: 'https://linkedin.com' },
         { name: 'Email', icon: '✉️', url: 'mailto:your.email@example.com' },
     ];

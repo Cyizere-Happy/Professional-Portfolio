@@ -105,8 +105,8 @@ const ExpertiseCard = ({ item, index, onOpen }) => {
                     </motion.div>
                 )}
 
-                {/* Lighter overlay for better visibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 opacity-80 group-hover:opacity-60 transition-opacity" />
+                {/* Stronger overlay for guaranteed visibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30 opacity-90 transition-opacity" />
             </div>
 
             {/* Content - Elevated for 3D effect */}
