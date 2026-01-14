@@ -84,9 +84,9 @@ const Experience = () => {
         {
             id: "03",
             role: "Backend Developer",
-            company: "Ngwino In Cycles",
+            company: "Ngwino",
             period: "2025",
-            description: "Optimized backend workflows and database structures for cycle management systems, focusing on data integrity and high availability.",
+            description: "Key contributor to the SafiCycles project. Designed and optimized backend workflows for cycle management, ensuring data integrity and high availability.",
             x: 65,
             y: 55,
             delay: 0.6

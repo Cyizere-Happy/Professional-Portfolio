@@ -3,34 +3,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const testimonials = [
     {
-        name: "Mehwish",
-        role: "Software Engineer",
-        content: "Antigravity's vision for minimal yet powerful interfaces is truly inspiring. The attention to detail is unmatched.",
-        image: "https://i.pravatar.cc/150?u=mehwish"
+        name: "Kayiranga Simbi Kelia",
+        role: "Co-CEO, 4WARD",
+        content: "A visionary technical leader. She transforms abstract ideas into scalable, high-performance systems with remarkable precision.",
+        image: "https://i.pravatar.cc/150?u=kelia"
     },
     {
-        name: "Elizabeth Jeff",
-        role: "Product Designer",
-        content: "Working with this team was a breeze. They transformed our complex requirements into a sleek, intuitive experience.",
-        image: "https://i.pravatar.cc/150?u=elizabeth"
+        name: "Rwagaju Aphrodice",
+        role: "Instructor, Rwanda Coding Academy",
+        content: "Her rigorous approach to problem-solving sets her apart. She tackles complex engineering challenges with a level of maturity rarely seen.",
+        image: "https://i.pravatar.cc/150?u=rwagaju"
     },
     {
-        name: "Emily Thomas",
-        role: "Marketing Director",
-        content: "The black and white theme isn't just a style, it's a statement. Our clients love the new look and feel of the site.",
-        image: "https://i.pravatar.cc/150?u=emily"
+        name: "Louis Mukama",
+        role: "Instructor, Rwanda Coding Academy",
+        content: "Watching her evolve from a student to a high-caliber backend architect has been incredible. She builds systems that are built to last.",
+        image: "https://i.pravatar.cc/150?u=mukama"
     },
     {
-        name: "Sarah Jenkins",
-        role: "Creative Lead",
-        content: "The way they handle complex 3D integrations while keeping the UI fast and responsive is sheer brilliance.",
-        image: "https://i.pravatar.cc/150?u=sarah"
+        name: "RUKUNDO Furaha Divin",
+        role: "CEO, Ngwino",
+        content: "The backend infrastructure for SafiCycles is flawless. She delivered a system that is both secure and incredibly fast.",
+        image: "https://i.pravatar.cc/150?u=divin"
     },
     {
-        name: "David Chen",
-        role: "Founder, TechFlow",
-        content: "Exceptional craftsmanship. They don't just build websites; they build digital experiences that leave a lasting impression.",
-        image: "https://i.pravatar.cc/150?u=david"
+        name: "Uwase Teta Paola",
+        role: "Frontend Developer, Ngwino",
+        content: "Integrating her APIs was seamless. Clear documentation, perfect data structures, and always available to collaborate.",
+        image: "https://i.pravatar.cc/150?u=paola"
     }
 ];
 

@@ -13,7 +13,7 @@ const Navbar = () => {
                     setActiveItem(entry.target.id);
                 }
             });
-        }, { threshold: 0.5 }); // 50% section visibility triggers update
+        }, { threshold: 0.2 }); // 20% section visibility triggers update
 
         navItems.forEach(item => {
             const element = document.getElementById(item.id);
