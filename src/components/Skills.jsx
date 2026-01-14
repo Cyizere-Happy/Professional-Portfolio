@@ -3,39 +3,116 @@ import { motion } from 'framer-motion';
 
 const CircularProgress = ({ percentage, label }) => {
     return (
-        <div className="flex flex-col items-center gap-2">
-            <div className="relative w-20 h-20 md:w-24 md:h-24 flex items-center justify-center">
+        <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            whileHover={{
+                scale: 1.05,
+                y: -8,
+            }}
+            transition={{ duration: 0.3 }}
+            viewport={{ once: true }}
+            className="group relative flex flex-col items-center gap-4 p-6 md:p-8 rounded-2xl cursor-default overflow-hidden"
+            style={{
+                background: 'linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(255,255,255,0.08)',
+            }}
+        >
+            {/* Animated gradient border on hover */}
+            <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05))',
+                    padding: '1px',
+                    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+                    WebkitMaskComposite: 'xor',
+                    maskComposite: 'exclude',
+                }}
+            />
+
+            {/* Glow effect on hover */}
+            <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl"
+                style={{
+                    background: 'radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, transparent 70%)',
+                }}
+            />
+
+            <div className="relative w-24 h-24 md:w-28 md:h-28 flex items-center justify-center">
+                {/* Outer glow ring */}
+                <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                    style={{
+                        background: 'radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%)',
+                        filter: 'blur(10px)',
+                    }}
+                />
+
                 <svg className="w-full h-full transform -rotate-90">
+                    {/* Background circle */}
                     <circle
                         cx="50%"
                         cy="50%"
-                        r="40%"
-                        stroke="rgba(255,255,255,0.03)"
-                        strokeWidth="3"
+                        r="42%"
+                        stroke="rgba(255,255,255,0.05)"
+                        strokeWidth="4"
                         fill="transparent"
                     />
+                    {/* Progress circle with gradient */}
                     <motion.circle
                         cx="50%"
                         cy="50%"
-                        r="40%"
-                        stroke="white"
-                        strokeWidth="3"
-                        strokeDasharray="251%"
-                        initial={{ strokeDashoffset: "251%" }}
-                        whileInView={{ strokeDashoffset: `${251 - (251 * percentage) / 100}%` }}
-                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        r="42%"
+                        stroke="url(#gradient)"
+                        strokeWidth="4"
+                        strokeDasharray="264%"
+                        initial={{ strokeDashoffset: "264%" }}
+                        whileInView={{ strokeDashoffset: `${264 - (264 * percentage) / 100}%` }}
+                        transition={{ duration: 2, ease: "easeOut", delay: 0.2 }}
                         viewport={{ once: true }}
                         fill="transparent"
                         strokeLinecap="round"
-                        className="drop-shadow-[0_0_5px_rgba(255,255,255,0.2)]"
+                        className="drop-shadow-[0_0_8px_rgba(255,255,255,0.4)]"
                     />
+                    {/* Gradient definition */}
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="rgba(255,255,255,1)" />
+                            <stop offset="100%" stopColor="rgba(255,255,255,0.6)" />
+                        </linearGradient>
+                    </defs>
                 </svg>
+
+                {/* Center content */}
                 <div className="absolute flex flex-col items-center">
-                    <span className="text-sm md:text-base font-medium text-white/90">{percentage}%</span>
+                    <motion.span
+                        initial={{ opacity: 0, scale: 0.5 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5, delay: 0.5 }}
+                        viewport={{ once: true }}
+                        className="text-2xl md:text-3xl font-bold text-white group-hover:scale-110 transition-transform duration-300"
+                        style={{
+                            textShadow: '0 0 20px rgba(255,255,255,0.3)',
+                        }}
+                    >
+                        {percentage}
+                    </motion.span>
+                    <span className="text-[10px] text-white/40 font-semibold tracking-wider">%</span>
                 </div>
             </div>
-            <span className="text-white/30 text-[9px] uppercase tracking-[0.25em] font-semibold text-center leading-tight max-w-[80px]">{label}</span>
-        </div>
+
+            {/* Label */}
+            <span className="relative text-white/60 group-hover:text-white/90 text-[10px] md:text-[11px] uppercase tracking-[0.2em] font-bold text-center leading-tight max-w-[140px] transition-colors duration-300">
+                {label}
+            </span>
+
+            {/* Bottom accent line */}
+            <motion.div
+                className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[2px] bg-gradient-to-r from-transparent via-white/40 to-transparent"
+                initial={{ width: '0%' }}
+                whileInView={{ width: '60%' }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                viewport={{ once: true }}
+            />
+        </motion.div>
     );
 };
 
@@ -110,18 +187,10 @@ const Skills = () => {
                     </p>
                 </motion.div>
 
-                {/* Core Specialties - Circular indicators */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-32">
+                {/* Core Specialties - Premium Cards */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-32">
                     {coreSpecialties.map((skill, idx) => (
-                        <motion.div
-                            key={idx}
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.5, delay: idx * 0.1 }}
-                            viewport={{ once: true }}
-                        >
-                            <CircularProgress {...skill} />
-                        </motion.div>
+                        <CircularProgress key={idx} {...skill} />
                     ))}
                 </div>
 

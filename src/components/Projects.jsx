@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Github, Database, Server, Shield, Cpu } from 'lucide-react';
 
-const ProjectCard = ({ id, title, description, tech, delay, rotation, xOffset, yOffset }) => (
+const ProjectCard = ({ id, title, description, tech, delay, rotation, xOffset, yOffset, link }) => (
     <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 50, rotate: rotation - 5 }}
         whileInView={{ opacity: 1, scale: 1, y: 0, rotate: rotation }}
@@ -17,9 +17,16 @@ const ProjectCard = ({ id, title, description, tech, delay, rotation, xOffset, y
     >
         <div className="flex justify-between items-start">
             <span className="text-white/10 font-heading text-xl font-bold">{id}</span>
-            <div className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300">
-                <ExternalLink size={18} className="text-white group-hover:text-black" />
-            </div>
+            {link && (
+                <a
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white group-hover:text-black transition-all duration-300"
+                >
+                    <Github size={18} className="text-white group-hover:text-black" />
+                </a>
+            )}
         </div>
 
         <div>
@@ -80,6 +87,17 @@ const Projects = () => {
             xOffset: "5%",
             yOffset: "-20px",
             delay: 0.4
+        },
+        {
+            id: "05",
+            title: "Pentest Shell",
+            description: "Advanced network penetration testing script featuring customizable scans (Basic, Full, Web), vulnerability mapping, and automated exploitation checks. Showcasing deep backend security expertise.",
+            tech: ["Python", "Shell", "Security", "Automation"],
+            link: "https://github.com/Cyizere-Happy/Pentest-Tool",
+            rotation: -2,
+            xOffset: "-10%",
+            yOffset: "20px",
+            delay: 0.5
         }
     ];
 

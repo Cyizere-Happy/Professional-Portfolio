@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import React, { useRef, useState, useEffect } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 import videoPlaceholderImg from '../assets/video_making.png';
 import soraVideo from '../assets/sora_smart.mp4';
 import splineImg from '../assets/spline_3d.png';
@@ -7,11 +7,12 @@ import frontendImg from '../assets/frontend_dev.png';
 
 const expertiseItems = [
     {
-        title: "Video Making",
-        description: "Cinematic storytelling and high-end post-production for digital narratives. Showcasing 'Sora Smart' production.",
+        title: "Video Motion",
+        description: "Cinematic storytelling and high-end post-production. Promoting our vision through visual excellence.",
+        fullDescription: "Video Motion is our specialized approach to digital narratives. We combine cinematic techniques with high-end post-production to create compelling visuals that promote and elevate brand storytelling.",
         video: soraVideo,
         image: videoPlaceholderImg,
-        tag: "Motion",
+        tag: "Motion Design",
         hasVideo: true
     },
     {
@@ -29,11 +30,9 @@ const expertiseItems = [
     }
 ];
 
-const ExpertiseCard = ({ item, index }) => {
+const ExpertiseCard = ({ item, index, onOpen }) => {
     const x = useMotionValue(0);
     const y = useMotionValue(0);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const videoRef = useRef(null);
 
     const mouseXSpring = useSpring(x);
     const mouseYSpring = useSpring(y);
@@ -58,19 +57,11 @@ const ExpertiseCard = ({ item, index }) => {
         y.set(0);
     };
 
-    const handleVideoClick = (e) => {
+    const handleClick = (e) => {
         if (item.hasVideo) {
             e.preventDefault();
             e.stopPropagation();
-            if (videoRef.current) {
-                if (isPlaying) {
-                    videoRef.current.pause();
-                    setIsPlaying(false);
-                } else {
-                    videoRef.current.play();
-                    setIsPlaying(true);
-                }
-            }
+            onOpen(item);
         }
     };
 
@@ -83,7 +74,8 @@ const ExpertiseCard = ({ item, index }) => {
             }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
-            className="w-full h-full relative p-8 border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-white/40 group-hover:shadow-[0_0_40px_rgba(255,255,255,0.05)]"
+            onClick={handleClick}
+            className="w-full h-full relative p-8 border border-white/10 shadow-2xl transition-all duration-500 group-hover:border-white/40 group-hover:shadow-[0_0_40px_rgba(255,255,255,0.05)] cursor-pointer"
         >
             {/* Background Color Layer - Behind everything */}
             <div className="absolute inset-0 bg-[#0a0a0a] -z-10" style={{ transform: "translateZ(-60px)" }} />
@@ -91,49 +83,30 @@ const ExpertiseCard = ({ item, index }) => {
             {/* Background Asset - In the middle */}
             <div
                 style={{ transform: "translateZ(-30px)" }}
-                className="absolute inset-0 z-0 overflow-hidden rounded-[2.5rem] cursor-pointer"
-                onClick={handleVideoClick}
+                className="absolute inset-0 z-0 overflow-hidden rounded-[2.5rem]"
             >
-                {item.hasVideo ? (
-                    <>
-                        {/* Thumbnail Image */}
-                        <img
-                            src={item.image}
-                            alt={item.title}
-                            className={`w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 ${isPlaying ? 'opacity-0' : 'opacity-100'}`}
-                        />
-                        {/* Video Element */}
-                        <video
-                            ref={videoRef}
-                            src={item.video}
-                            loop
-                            playsInline
-                            className={`absolute inset-0 w-full h-full object-cover transition-all duration-1000 ${isPlaying ? 'opacity-100' : 'opacity-0'}`}
-                        />
-                        {/* Play Button Overlay */}
-                        {!isPlaying && (
-                            <motion.div
-                                initial={{ scale: 0.8, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
-                            >
-                                <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/40 flex items-center justify-center group-hover:bg-white/30 group-hover:scale-110 transition-all duration-300">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="white" className="ml-1">
-                                        <path d="M8 5v14l11-7z" />
-                                    </svg>
-                                </div>
-                            </motion.div>
-                        )}
-                    </>
-                ) : (
-                    <img
-                        src={item.image}
-                        alt={item.title}
-                        className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                    />
+                <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110 opacity-100"
+                />
+
+                {item.hasVideo && (
+                    <motion.div
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
+                    >
+                        <div className="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md border-2 border-white/40 flex items-center justify-center group-hover:bg-white/30 group-hover:scale-110 transition-all duration-300">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="white" className="ml-1">
+                                <path d="M8 5v14l11-7z" />
+                            </svg>
+                        </div>
+                    </motion.div>
                 )}
+
                 {/* Lighter overlay for better visibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 opacity-80 group-hover:opacity-60 transition-opacity" />
             </div>
 
             {/* Content - Elevated for 3D effect */}
@@ -147,11 +120,11 @@ const ExpertiseCard = ({ item, index }) => {
                     </span>
                 </div>
 
-                <h3 className="text-4xl font-heading font-black mb-4 tracking-tighter leading-none text-white group-hover:translate-x-1 transition-transform duration-300">
+                <h3 className="text-4xl font-heading font-black mb-4 tracking-tighter leading-none text-white group-hover:translate-x-1 transition-transform duration-300 drop-shadow-2xl">
                     {item.title}
                 </h3>
 
-                <p className="text-white/80 text-sm leading-relaxed font-body max-w-[90%] drop-shadow-md">
+                <p className="text-white/90 text-sm leading-relaxed font-body max-w-[90%] drop-shadow-xl">
                     {item.description}
                 </p>
 
@@ -190,7 +163,208 @@ const ExpertiseCard = ({ item, index }) => {
     );
 };
 
+const VideoModal = ({ item, isOpen, onClose }) => {
+    const videoRef = useRef(null);
+    const [currentTime, setCurrentTime] = useState(0);
+    const [duration, setDuration] = useState(0);
+    const [showControls, setShowControls] = useState(true);
+    const controlsTimeoutRef = useRef(null);
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+            // Reset controls visibility
+            setShowControls(true);
+            // Hide controls after 3 seconds
+            startControlsTimeout();
+        } else {
+            document.body.style.overflow = 'unset';
+            clearControlsTimeout();
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+            clearControlsTimeout();
+        };
+    }, [isOpen]);
+
+    const startControlsTimeout = () => {
+        clearControlsTimeout();
+        controlsTimeoutRef.current = setTimeout(() => {
+            setShowControls(false);
+        }, 3000);
+    };
+
+    const clearControlsTimeout = () => {
+        if (controlsTimeoutRef.current) {
+            clearTimeout(controlsTimeoutRef.current);
+        }
+    };
+
+    const handleMouseMove = () => {
+        if (!showControls) {
+            setShowControls(true);
+        }
+        startControlsTimeout();
+    };
+
+    const handleTimeUpdate = () => {
+        if (videoRef.current) {
+            setCurrentTime(videoRef.current.currentTime);
+            setDuration(videoRef.current.duration);
+        }
+    };
+
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    };
+
+    return (
+        <AnimatePresence>
+            {isOpen && (
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12 overflow-hidden"
+                >
+                    <div className="absolute inset-0 bg-black/95 backdrop-blur-2xl" onClick={onClose} />
+
+                    <motion.div
+                        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+                        animate={{ scale: 1, opacity: 1, y: 0 }}
+                        exit={{ scale: 0.9, opacity: 0, y: 20 }}
+                        transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                        onMouseMove={handleMouseMove}
+                        className="relative w-full max-w-7xl aspect-video bg-[#0a0a0a] rounded-3xl overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.5)] border border-white/10 group/modal"
+                    >
+                        {/* Background Video */}
+                        <video
+                            ref={videoRef}
+                            src={item.video}
+                            autoPlay
+                            loop
+                            onTimeUpdate={handleTimeUpdate}
+                            className="absolute inset-0 w-full h-full object-cover"
+                        />
+
+                        {/* Dark Overlay for Text Readability */}
+                        <AnimatePresence>
+                            {showControls && (
+                                <motion.div
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    exit={{ opacity: 0 }}
+                                    className="absolute inset-0 z-10"
+                                >
+                                    <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/20 to-transparent pt-12 pl-12" />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-black/40" />
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Top Bar - Simplified */}
+                        <div className="absolute top-6 left-8 flex gap-2 z-20">
+                            {/* Window controls removed as requested */}
+                        </div>
+
+                        {/* Content Area */}
+                        <AnimatePresence>
+                            {showControls && (
+                                <motion.div
+                                    initial={{ x: -20, opacity: 0 }}
+                                    animate={{ x: 0, opacity: 1 }}
+                                    exit={{ x: -20, opacity: 0 }}
+                                    transition={{ duration: 0.5 }}
+                                    className="absolute top-24 right-12 z-20 max-w-xl text-right md:text-left md:left-12"
+                                >
+                                    <h2 className="text-5xl md:text-7xl font-heading font-black text-white tracking-tighter mb-4">
+                                        {item.title}
+                                    </h2>
+
+                                    <div className="flex items-center gap-4 mb-8">
+                                        <span className="text-white/60 text-sm font-bold uppercase tracking-[0.2em]">Showcase - {formatTime(duration)}</span>
+                                        <span className="px-2 py-0.5 border border-white/40 rounded text-[10px] font-bold text-white/40 italic">PRODUCTION</span>
+                                    </div>
+
+                                    <p className="text-white/80 text-lg leading-relaxed font-body max-w-lg drop-shadow-xl">
+                                        {item.fullDescription || item.description}
+                                    </p>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+                        {/* Bottom Playback Controls */}
+                        <AnimatePresence>
+                            {showControls && (
+                                <motion.div
+                                    initial={{ y: 20, opacity: 0 }}
+                                    animate={{ y: 0, opacity: 1 }}
+                                    exit={{ y: 20, opacity: 0 }}
+                                    transition={{ duration: 0.5 }}
+                                    className="absolute bottom-12 left-12 right-12 z-20"
+                                >
+                                    {/* Progress Bar */}
+                                    <div className="relative w-full h-1 bg-white/10 rounded-full mb-8 overflow-hidden group/progress cursor-pointer">
+                                        <motion.div
+                                            className="absolute top-0 left-0 h-full bg-[#ffbd2e]"
+                                            style={{ width: `${(currentTime / duration) * 100}%` }}
+                                        />
+                                        <div className="absolute top-1/2 -translate-y-1/2 h-3 w-3 bg-white rounded-full shadow-lg opacity-0 group-hover/progress:opacity-100 transition-opacity"
+                                            style={{ left: `${(currentTime / duration) * 100}%` }}
+                                        />
+                                    </div>
+
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-8">
+                                            <span className="text-white/40 text-xs font-mono">{formatTime(currentTime)}</span>
+                                            <div className="flex items-center gap-6 text-white/60">
+                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="hover:text-white cursor-pointer transition-colors">
+                                                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92c0-1.61-1.31-2.92-2.92-2.92z" />
+                                                </svg>
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="hover:text-white cursor-pointer transition-colors">
+                                                    <path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z" />
+                                                </svg>
+                                                <div className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:bg-white/10 hover:border-white/40 transition-all cursor-pointer">
+                                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                                                    </svg>
+                                                </div>
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="hover:text-white cursor-pointer transition-colors">
+                                                    <path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z" />
+                                                </svg>
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" className="hover:text-white cursor-pointer transition-colors">
+                                                    <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                        <span className="text-white/40 text-xs font-mono">{formatTime(duration)}</span>
+                                    </div>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+
+
+                        {/* Close button for safety/accessibility */}
+                        <button
+                            onClick={onClose}
+                            className="absolute top-6 right-8 text-white/20 hover:text-white transition-colors z-30"
+                        >
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                                <path d="M18 6L6 18M6 6l12 12" />
+                            </svg>
+                        </button>
+                    </motion.div>
+                </motion.div>
+            )}
+        </AnimatePresence>
+    );
+};
+
 const Expertise = () => {
+    const [selectedItem, setSelectedItem] = useState(null);
+
     return (
         <section id="expertise" className="relative py-40 px-6 md:px-12 bg-[#050505] overflow-hidden">
             {/* Aesthetic Background - Matching other sections */}
@@ -217,7 +391,12 @@ const Expertise = () => {
                 {/* Grid Layout */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-24">
                     {expertiseItems.map((item, index) => (
-                        <ExpertiseCard key={item.title} item={item} index={index} />
+                        <ExpertiseCard
+                            key={item.title}
+                            item={item}
+                            index={index}
+                            onOpen={(clickedItem) => setSelectedItem(clickedItem)}
+                        />
                     ))}
                 </div>
 
@@ -228,6 +407,13 @@ const Expertise = () => {
                     <div className="h-[1px] w-24 bg-white" />
                 </div>
             </div>
+
+            {/* Cinematic Video Modal */}
+            <VideoModal
+                item={selectedItem}
+                isOpen={!!selectedItem}
+                onClose={() => setSelectedItem(null)}
+            />
         </section>
     );
 };
