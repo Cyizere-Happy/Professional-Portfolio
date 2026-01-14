@@ -6,33 +6,37 @@ const testimonials = [
         name: "Kayiranga Simbi Kelia",
         role: "Co-CEO, 4WARD",
         content: "A visionary technical leader. She transforms abstract ideas into scalable, high-performance systems with remarkable precision.",
-        image: "https://i.pravatar.cc/150?u=kelia"
+        color: "#ffbd2e" // Yellow
     },
     {
         name: "Rwagaju Aphrodice",
         role: "Instructor, Rwanda Coding Academy",
         content: "Her rigorous approach to problem-solving sets her apart. She tackles complex engineering challenges with a level of maturity rarely seen.",
-        image: "https://i.pravatar.cc/150?u=rwagaju"
+        color: "#2effbd" // Teal
     },
     {
         name: "Louis Mukama",
         role: "Instructor, Rwanda Coding Academy",
         content: "Watching her evolve from a student to a high-caliber backend architect has been incredible. She builds systems that are built to last.",
-        image: "https://i.pravatar.cc/150?u=mukama"
+        color: "#bd2eff" // Purple
     },
     {
         name: "RUKUNDO Furaha Divin",
         role: "CEO, Ngwino",
         content: "The backend infrastructure for SafiCycles is flawless. She delivered a system that is both secure and incredibly fast.",
-        image: "https://i.pravatar.cc/150?u=divin"
+        color: "#ff2e2e" // Red
     },
     {
         name: "Uwase Teta Paola",
         role: "Frontend Developer, Ngwino",
         content: "Integrating her APIs was seamless. Clear documentation, perfect data structures, and always available to collaborate.",
-        image: "https://i.pravatar.cc/150?u=paola"
+        color: "#2e86ff" // Blue
     }
 ];
+
+const getInitials = (name) => {
+    return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+};
 
 const Testimonials = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -120,8 +124,13 @@ const Testimonials = () => {
                                         className="absolute bg-[#0a0a0a] border border-white/10 p-6 md:p-8 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-full max-w-[280px] md:max-w-[320px] aspect-square flex flex-col justify-between group cursor-default"
                                     >
                                         <div className="flex justify-between items-start">
-                                            <div className="w-12 h-12 rounded-full overflow-hidden border border-white/10 p-1">
-                                                <img src={t.image} alt={t.name} className="w-full h-full object-cover rounded-full grayscale group-hover:grayscale-0 transition-all duration-700" />
+                                            <div
+                                                className="w-12 h-12 rounded-full flex items-center justify-center border border-white/10 group-hover:scale-110 transition-transform duration-500 shadow-inner"
+                                                style={{ backgroundColor: `${t.color}22`, color: t.color }}
+                                            >
+                                                <span className="text-xs font-bold tracking-tighter opacity-80 group-hover:opacity-100 transition-opacity">
+                                                    {getInitials(t.name)}
+                                                </span>
                                             </div>
                                             <div className="text-white/5 opacity-40 group-hover:opacity-100 transition-opacity">
                                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
